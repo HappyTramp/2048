@@ -9,7 +9,7 @@ OBJDIR = build
 
 CXX = g++
 CXXFLAGS = -Wall -Wextra -I$(INCDIR) $(shell sdl2-config --cflags)
-LDFLAGS = $(shell sdl2-config --libs)
+LDFLAGS = $(shell sdl2-config --libs) -lSDL2_ttf
 
 SRC = $(shell find $(SRCDIR) -type f -name "*.cpp")
 INC = $(shell find $(INCDIR) -type f -name "*.h" -name "*.hpp")
