@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 #include "graphics.hpp"
 #include "game.hpp"
 
@@ -9,6 +10,7 @@
 
 int main()
 {
+    srand(time(NULL));
     Game game = Game(GAME_GRID_SIZE);
     Graphics *graphics = new Graphics(&game, WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT);
 

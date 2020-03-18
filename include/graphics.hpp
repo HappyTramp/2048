@@ -6,6 +6,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include "game.hpp"
+#include "2048.hpp"
 
 class Graphics
 {

@@ -32,6 +32,8 @@ Graphics::~Graphics()
 
 void Graphics::update()
 {
+    if (game->lost())
+        running = false;
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
     handleEvent();
@@ -91,6 +93,23 @@ void Graphics::handleEvent()
         {
             case SDL_QUIT:
                 running = false;
+                break;
+            case SDL_KEYDOWN:
+                switch (e.key.keysym.sym)
+                {
+                    case SDLK_LEFT:
+                        game->move(DIRECTION_LEFT);
+                        break;
+                    case SDLK_RIGHT:
+                        game->move(DIRECTION_RIGHT);
+                        break;
+                    case SDLK_DOWN:
+                        game->move(DIRECTION_DOWN);
+                        break;
+                    case SDLK_UP:
+                        game->move(DIRECTION_UP);
+                        break;
+                }
         }
     }
 
