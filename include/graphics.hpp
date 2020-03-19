@@ -3,6 +3,10 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
+#include <map>
+#include <utility>
+#include <utility>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include "game.hpp"
@@ -28,8 +32,12 @@ class Graphics
     SDL_Renderer *renderer;
     SDL_Window *window;
     TTF_Font *font;
+    std::vector< std::pair<int, SDL_Texture*> > numberTexBuf;
+    std::map< int, SDL_Color > palette;
 
     void handleEvent();
+    SDL_Texture *addNumberTex(int n);
+    SDL_Texture *getNumberTex(int n);
     void error();
 };
 

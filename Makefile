@@ -12,7 +12,7 @@ CXXFLAGS = -Wall -Wextra -I$(INCDIR) $(shell sdl2-config --cflags)
 LDFLAGS = $(shell sdl2-config --libs) -lSDL2_ttf
 
 SRC = $(shell find $(SRCDIR) -type f -name "*.cpp")
-INC = $(shell find $(INCDIR) -type f -name "*.h" -name "*.hpp")
+INC = $(shell find $(INCDIR) -type f -name "*.h" -o -name "*.hpp")
 OBJ = $(SRC:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
 all: prebuild $(NAME)
@@ -23,7 +23,7 @@ prebuild:
 $(NAME): $(OBJ)
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(INC)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 clean:
