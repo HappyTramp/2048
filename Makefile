@@ -8,7 +8,7 @@ INCDIR = include
 OBJDIR = build
 
 CXX = g++
-CXXFLAGS = -Wall -Wextra -I$(INCDIR) $(shell sdl2-config --cflags)
+CXXFLAGS = -Wall -Wextra -I$(INCDIR) $(shell sdl2-config --cflags) -std=c++11
 LDFLAGS = $(shell sdl2-config --libs) -lSDL2_ttf
 
 SRC = $(shell find $(SRCDIR) -type f -name "*.cpp")
@@ -18,7 +18,7 @@ OBJ = $(SRC:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 all: prebuild $(NAME)
 
 prebuild:
-	$(MKDIR) $(OBJDIR)
+	@$(MKDIR) $(OBJDIR)
 
 $(NAME): $(OBJ)
 	$(CXX) -o $@ $^ $(LDFLAGS)

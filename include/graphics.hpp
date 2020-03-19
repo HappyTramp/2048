@@ -11,11 +11,12 @@
 #include <SDL2/SDL_ttf.h>
 #include "game.hpp"
 #include "2048.hpp"
+#include "ai.hpp"
 
 class Graphics
 {
     public:
-    Graphics(Game *g, std::string t, int w, int h);
+    Graphics(Game *g, std::string t, int w, int h, AI *ai = NULL);
     ~Graphics();
 
     void update();
@@ -34,6 +35,10 @@ class Graphics
     SDL_Texture *scoreText;
     std::vector< std::pair<int, SDL_Texture*> > numberTexBuf;
     std::map< int, SDL_Color > palette;
+    AI *ai;
+    Uint32 aiTimeStep;
+    Uint32 aiNextTime;
+
 
     void drawGame();
     void drawCell(int x, int y);

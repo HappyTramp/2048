@@ -2,8 +2,9 @@
 
 #define CELL_GAP 5
 #define GRID_BORDER 10
+#define AI_TIME_STEP 100
 
-Graphics::Graphics(Game *g, std::string t, int w, int h)
+Graphics::Graphics(Game *g, std::string t, int w, int h, AI *a)
 {
     running = true;
     game = g;
@@ -11,6 +12,9 @@ Graphics::Graphics(Game *g, std::string t, int w, int h)
     width = w;
     height = h;
     gridSize = std::min(width, height);
+    ai = a;
+    aiTimeStep = AI_TIME_STEP;
+    aiNextTime = SDL_GetTicks();
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
         error();
@@ -58,6 +62,14 @@ void Graphics::update()
     drawGame();
     drawScore();
     SDL_RenderPresent(renderer);
+    if (ai != NULL)
+    {
+        if (SDL_TICKS_PASSED(SDL_GetTicks(), aiNextTime))
+        {
+            aiNextTime = SDL_GetTicks() + aiTimeStep;
+            game->move(ai->move());
+        }
+    }
     SDL_Delay(3);
 }
 
