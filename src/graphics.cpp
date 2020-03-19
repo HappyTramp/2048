@@ -1,5 +1,8 @@
 #include "graphics.hpp"
 
+#define CELL_GAP 5
+#define GRID_BORDER 10
+
 Graphics::Graphics(Game *g, std::string t, int w, int h)
 {
     running = true;

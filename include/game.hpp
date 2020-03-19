@@ -2,6 +2,8 @@
 # define GAME_HPP
 
 #include <cstdlib>
+#include <vector>
+#include <utility>
 #include "2048.hpp"
 
 class Game
@@ -18,6 +20,10 @@ class Game
     private:
     int size;
     int **grid;
+    void mergeRow(std::vector<int> &row);
+    int **gridCopy();
+    bool gridEqual(int **other);
+    void gridDestroy(int **g);
 };
 
 #endif
