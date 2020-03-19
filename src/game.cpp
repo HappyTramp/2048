@@ -6,9 +6,14 @@ Game::Game(int s)
     size = s;
     grid = new int*[size];
     for (int i = 0; i < size; i++)
+    {
         grid[i] = new int[size];
+        for (int j = 0; j < size; j++)
+            grid[i][j] = 0;
+    }
     spawn();
     spawn();
+    score = 0;
 }
 
 Game::~Game()
@@ -19,6 +24,11 @@ Game::~Game()
 int Game::getSize()
 {
     return size;
+}
+
+int Game::getScore()
+{
+    return score;
 }
 
 int Game::at(int x, int y)
@@ -145,6 +155,7 @@ void Game::mergeRow(std::vector<int> &row)
         if (row[curr + 1] == row[curr])
         {
             row[curr] *= 2;
+            score += row[curr];
             row[curr + 1] = 0;
             for (size_t i = curr + 1; i < row.size() - 1; i++)
                 row[i] = row[i + 1];

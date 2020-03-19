@@ -19,8 +19,6 @@ class Graphics
     ~Graphics();
 
     void update();
-    void drawGame();
-    void drawCell(int x, int y);
     bool isRunning();
 
     private:
@@ -28,16 +26,22 @@ class Graphics
     std::string title;
     int width;
     int height;
+    int gridSize;
     Game *game;
     SDL_Renderer *renderer;
     SDL_Window *window;
     TTF_Font *font;
+    SDL_Texture *scoreText;
     std::vector< std::pair<int, SDL_Texture*> > numberTexBuf;
     std::map< int, SDL_Color > palette;
 
+    void drawGame();
+    void drawCell(int x, int y);
+    void drawScore();
     void handleEvent();
     SDL_Texture *addNumberTex(int n);
     SDL_Texture *getNumberTex(int n);
+    SDL_Texture *newTextTex(std::string s, SDL_Color c);
     void error();
 };
 

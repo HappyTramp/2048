@@ -12,6 +12,7 @@ class Game
     Game(int s);
     ~Game();
     int getSize();
+    int getScore();
     int at(int x, int y);
     void move(Direction direction);
     void spawn();
@@ -20,6 +21,7 @@ class Game
     private:
     int size;
     int **grid;
+    int score;
     void mergeRow(std::vector<int> &row);
     int **gridCopy();
     bool gridEqual(int **other);
