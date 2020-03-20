@@ -1,5 +1,9 @@
 # 2048
 
+(shitty) 2048 game.
+
+![screenshot](./screenshot.png)
+
 ## Usage
 
 ```

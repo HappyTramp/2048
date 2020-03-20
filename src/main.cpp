@@ -6,7 +6,7 @@
 #include "rand_ai.hpp"
 
 #define WINDOW_TITLE "2048"
-#define WINDOW_WIDTH 640
+#define WINDOW_WIDTH 600
 #define WINDOW_HEIGHT 480
 #define GAME_GRID_SIZE 4
 

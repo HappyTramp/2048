@@ -21,19 +21,19 @@ Graphics::Graphics(Game &game, std::string title, int width, int height, AI *ai)
         error();
     if ((m_font = TTF_OpenFont("./font/noto_mono_regular.ttf", 16)) == NULL)
         error();
-    m_scoreText = newTextTex("score", {255, 255, 255, 255});
-    m_palette[0] = {10, 10, 10, 255};
-    m_palette[2] = {100, 100, 100, 255};
-    m_palette[4] = {65, 65, 65, 255};
-    m_palette[8] = {40, 40, 40, 255};
-    m_palette[16] = {150, 50, 20, 255};
-    m_palette[32] = {160, 70, 20, 255};
-    m_palette[64] = {190, 80, 30, 255};
-    m_palette[128] = {200, 100, 40, 255};
-    m_palette[256] = {220, 120, 40, 255};
-    m_palette[512] = {230, 180, 30, 255};
-    m_palette[1024] = {230, 190, 20, 255};
-    m_palette[2048] = {230, 200, 10, 255};
+    m_scoreText = newTextTex("score", makeColor(255, 255, 255));
+    m_palette[0] = makeColor(10, 10, 10);
+    m_palette[2] = makeColor(100, 100, 100);
+    m_palette[4] = makeColor(65, 65, 65);
+    m_palette[8] = makeColor(40, 40, 40);
+    m_palette[16] = makeColor(150, 50, 20);
+    m_palette[32] = makeColor(160, 70, 20);
+    m_palette[64] = makeColor(190, 80, 30);
+    m_palette[128] = makeColor(200, 100, 40);
+    m_palette[256] = makeColor(220, 120, 40);
+    m_palette[512] = makeColor(230, 180, 30);
+    m_palette[1024] = makeColor(230, 190, 20);
+    m_palette[2048] = makeColor(230, 200, 10);
 }
 
 Graphics::~Graphics()
@@ -84,7 +84,7 @@ void Graphics::drawCell(int x, int y)
     if ((tex = getNumberTex(m_game.get(y, x))) == NULL)
         tex = addNumberTex(m_game.get(y, x));
     if (m_palette.find(m_game.get(y, x)) == m_palette.end())
-        c = {30, 30, 30, 255};
+        c = makeColor(30, 30, 30);
     else
         c = m_palette[m_game.get(y, x)];
     r.x = 2 + x * (m_gridSize / m_game.getSize());
@@ -122,7 +122,7 @@ void Graphics::drawScore()
     }
     SDL_RenderCopy(m_renderer, m_scoreText, NULL, &r);
 
-    SDL_Texture *scoreNumTex = newTextTex(std::to_string(m_game.getScore()), {255, 255, 255, 255});
+    SDL_Texture *scoreNumTex = newTextTex(intToString(m_game.getScore()), makeColor(255, 255, 255));
     SDL_QueryTexture(scoreNumTex, NULL, NULL, &r.w, &r.h);
     if (m_width > m_height)
         r.y += 20;
@@ -172,7 +172,7 @@ SDL_Texture *Graphics::addNumberTex(int n)
 {
     SDL_Texture *tex;
     SDL_Color c = {255, 255, 255, 255};
-    tex = newTextTex(std::to_string(n), c);
+    tex = newTextTex(intToString(n), c);
     m_numberTexBuf.push_back(std::make_pair(n, tex));
     return tex;
 }
@@ -202,4 +202,22 @@ void Graphics::error() const
 {
     std::cout << SDL_GetError() << std::endl;
     exit(1);
+}
+
+SDL_Color   Graphics::makeColor(int r, int g, int b)
+{
+    SDL_Color c;
+
+    c.r = r;
+    c.g = g;
+    c.b = b;
+    c.a = 255;
+    return c;
+}
+
+std::string Graphics::intToString(int n)
+{
+    std::stringstream tmp;
+    tmp << n;
+    return tmp.str();
 }

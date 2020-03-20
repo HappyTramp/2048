@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include <sstream>
 #include <vector>
 #include <map>
 #include <utility>
@@ -50,6 +51,9 @@ class Graphics
     SDL_Texture *getNumberTex(int n) const;
     SDL_Texture *newTextTex(std::string s, SDL_Color c);
     void        error() const;
+
+    static SDL_Color   makeColor(int r, int g, int b);
+    static std::string intToString(int n);
 };
 
 #endif
