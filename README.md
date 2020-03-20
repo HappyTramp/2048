@@ -9,5 +9,5 @@ make all
 
 ## Dependencies
 
-- [SDL2](libsdl.org)
-- [SDL_ttf](libsdl.org/projects/SDL_ttf)
+- [SDL2](https://libsdl.org)
+- [SDL2_ttf](https://libsdl.org/projects/SDL_ttf)

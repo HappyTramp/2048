@@ -1,96 +1,109 @@
 #include "game.hpp"
 
 
-Game::Game(int s)
+Game::Game(int m_size): m_size(m_size), m_score(0)
 {
-    size = s;
-    grid = new int*[size];
-    for (int i = 0; i < size; i++)
+    m_grid = new int*[m_size];
+    for (int i = 0; i < m_size; i++)
     {
-        grid[i] = new int[size];
-        for (int j = 0; j < size; j++)
-            grid[i][j] = 0;
+        m_grid[i] = new int[m_size];
+        for (int j = 0; j < m_size; j++)
+            m_grid[i][j] = 0;
     }
     spawn();
     spawn();
-    score = 0;
+}
+
+Game::Game(Game const &other): m_size(other.m_size), m_score(other.m_score)
+{
+    m_grid = new int*[m_size];
+    for (int i = 0; i < m_size; i++)
+    {
+        m_grid[i] = new int[m_size];
+        for (int j = 0; j < m_size; j++)
+            m_grid[i][j] = other.get(i, j);
+    }
 }
 
 Game::~Game()
 {
-    gridDestroy(grid);
+    for (int i = 0; i < m_size; i++)
+        delete []m_grid[i];
+    delete []m_grid;
 }
 
-int Game::getSize()
+int Game::getSize() const
 {
-    return size;
+    return m_size;
 }
 
-int Game::getScore()
+int Game::getScore() const
 {
-    return score;
+    return m_score;
 }
 
-int Game::at(int x, int y)
+int Game::get(int y, int x) const
 {
-    return grid[y][x];
+    return m_grid[y][x];
 }
 
-void Game::move(Direction direction)
+bool Game::move(Direction direction)
 {
     std::vector<int> row;
-    int **saved = gridCopy();
+    Game saved(*this);
 
     switch (direction)
     {
         case DIRECTION_LEFT:
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < m_size; i++)
             {
                 row.clear();
-                for (int j = 0; j < size; j++)
-                    row.push_back(grid[i][j]);
+                for (int j = 0; j < m_size; j++)
+                    row.push_back(m_grid[i][j]);
                 mergeRow(row);
-                for (int j = 0; j < size; j++)
-                    grid[i][j] = row[j];
+                for (int j = 0; j < m_size; j++)
+                    m_grid[i][j] = row[j];
             }
             break;
         case DIRECTION_RIGHT:
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < m_size; i++)
             {
                 row.clear();
-                for (int j = size - 1; j >= 0; j--)
-                    row.push_back(grid[i][j]);
+                for (int j = m_size - 1; j >= 0; j--)
+                    row.push_back(m_grid[i][j]);
                 mergeRow(row);
-                for (int j = size - 1; j >= 0; j--)
-                    grid[i][j] = row[size - j - 1];
+                for (int j = m_size - 1; j >= 0; j--)
+                    m_grid[i][j] = row[m_size - j - 1];
             }
             break;
         case DIRECTION_DOWN:
-            for (int j = 0; j < size; j++)
+            for (int j = 0; j < m_size; j++)
             {
                 row.clear();
-                for (int i = size - 1; i >= 0; i--)
-                    row.push_back(grid[i][j]);
+                for (int i = m_size - 1; i >= 0; i--)
+                    row.push_back(m_grid[i][j]);
                 mergeRow(row);
-                for (int i = size - 1; i >= 0; i--)
-                    grid[i][j] = row[size - i - 1];
+                for (int i = m_size - 1; i >= 0; i--)
+                    m_grid[i][j] = row[m_size - i - 1];
             }
             break;
         case DIRECTION_UP:
-            for (int j = 0; j < size; j++)
+            for (int j = 0; j < m_size; j++)
             {
                 row.clear();
-                for (int i = 0; i < size; i++)
-                    row.push_back(grid[i][j]);
+                for (int i = 0; i < m_size; i++)
+                    row.push_back(m_grid[i][j]);
                 mergeRow(row);
-                for (int i = 0; i < size; i++)
-                    grid[i][j] = row[i];
+                for (int i = 0; i < m_size; i++)
+                    m_grid[i][j] = row[i];
             }
             break;
     }
-    if (!gridEqual(saved))
+    if (*this != saved)
         spawn();
-    gridDestroy(saved);
+    else
+        return false;
+    return true;
 }
 
 void Game::spawn()
@@ -99,32 +112,32 @@ void Game::spawn()
 
     if (lost())
         return;
-    for (int i = 0; i < size; i++)
-        for (int j = 0; j < size; j++)
+    for (int i = 0; i < m_size; i++)
+        for (int j = 0; j < m_size; j++)
         {
-            if (grid[i][j] == 0)
+            if (m_grid[i][j] == 0)
                 possible.push_back(std::make_pair(i, j));
         }
     if (possible.size() < 1)
         return;
     std::pair<int, int> pos = possible[rand() % possible.size()];
-    grid[pos.first][pos.second] = rand() % 2 == 0 ? 2 : 4;
+    m_grid[pos.first][pos.second] = rand() % 10 == 0 ? 4 : 2;
 }
 
-bool Game::lost()
+bool Game::lost() const
 {
-    for (int i = 0; i < size; i++)
-        for (int j = 0; j < size; j++)
+    for (int i = 0; i < m_size; i++)
+        for (int j = 0; j < m_size; j++)
         {
-            if (grid[i][j] == 0)
+            if (m_grid[i][j] == 0)
                 return false;
-            if (i - 1 >= 0 && grid[i - 1][j] == grid[i][j])
+            if (i - 1 >= 0 && m_grid[i - 1][j] == m_grid[i][j])
                 return false;
-            if (i + 1 < size && grid[i + 1][j] == grid[i][j])
+            if (i + 1 < m_size && m_grid[i + 1][j] == m_grid[i][j])
                 return false;
-            if (j - 1 >= 0 && grid[i][j - 1] == grid[i][j])
+            if (j - 1 >= 0 && m_grid[i][j - 1] == m_grid[i][j])
                 return false;
-            if (j + 1 < size && grid[i][j + 1] == grid[i][j])
+            if (j + 1 < m_size && m_grid[i][j + 1] == m_grid[i][j])
                 return false;
         }
     return true;
@@ -155,7 +168,7 @@ void Game::mergeRow(std::vector<int> &row)
         if (row[curr + 1] == row[curr])
         {
             row[curr] *= 2;
-            score += row[curr];
+            m_score += row[curr];
             row[curr + 1] = 0;
             for (size_t i = curr + 1; i < row.size() - 1; i++)
                 row[i] = row[i + 1];
@@ -163,30 +176,49 @@ void Game::mergeRow(std::vector<int> &row)
     }
 }
 
-int **Game::gridCopy()
+Game &Game::operator=(Game const &other)
 {
-    int **copy = new int*[size];
-    for (int i = 0; i < size; i++)
+    if (this == &other)
+        return *this;
+    for (int i = 0; i < m_size; i++)
+        delete []m_grid[i];
+    delete []m_grid;
+    m_size = other.m_size;
+    m_score = other.m_score;
+    m_grid = new int*[m_size];
+    for (int i = 0; i < m_size; i++)
     {
-        copy[i] = new int[size];
-        for (int j = 0; j < size; j++)
-            copy[i][j] = grid[i][j];
+        m_grid[i] = new int[m_size];
+        for (int j = 0; j < m_size; j++)
+            m_grid[i][j] = other.m_grid[i][j];
     }
-    return copy;
+    return *this;
 }
 
-bool Game::gridEqual(int **other)
+bool operator==(Game const &a, Game const &b)
 {
-    for (int i = 0; i < size; i++)
-        for (int j = 0; j < size; j++)
-            if (grid[i][j] != other[i][j])
+    if (a.getSize() != b.getSize())
+        return false;
+    for (int i = 0; i < a.getSize(); i++)
+        for (int j = 0; j < a.getSize(); j++)
+            if (a.get(i, j) != b.get(i, j))
                 return false;
     return true;
 }
 
-void Game::gridDestroy(int **g)
+bool operator!=(Game const &a, Game const &b)
 {
-    for (int i = 0; i < size; i++)
-        delete []g[i];
-    delete []g;
+    return !(a == b);
+}
+
+std::ostream &operator<<(std::ostream &out, Game const &game)
+{
+    out << "score: " << game.getScore() << std::endl;
+    for (int i = 0; i < game.getSize(); i++)
+    {
+        for (int j = 0; j < game.getSize(); j++)
+            out << std::setw(5) << game.get(i, j) << " ";
+        out << std::endl;
+    }
+    return out;
 }

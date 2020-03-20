@@ -1,12 +1,12 @@
 #ifndef H2048_HPP
 # define H2048_HPP
 
-typedef enum
+enum Direction
 {
-	DIRECTION_LEFT,
+	DIRECTION_LEFT = 0,
 	DIRECTION_RIGHT,
 	DIRECTION_DOWN,
 	DIRECTION_UP
-} Direction;
+};
 
 #endif

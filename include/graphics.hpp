@@ -16,38 +16,40 @@
 class Graphics
 {
     public:
-    Graphics(Game *g, std::string t, int w, int h, AI *ai = NULL);
+    Graphics(Game &game, std::string title, int width, int height, AI *ai = NULL);
     ~Graphics();
 
     void update();
-    bool isRunning();
+    bool isRunning() const;
 
     private:
-    bool running;
-    std::string title;
-    int width;
-    int height;
-    int gridSize;
-    Game *game;
-    SDL_Renderer *renderer;
-    SDL_Window *window;
-    TTF_Font *font;
-    SDL_Texture *scoreText;
-    std::vector< std::pair<int, SDL_Texture*> > numberTexBuf;
-    std::map< int, SDL_Color > palette;
-    AI *ai;
-    Uint32 aiTimeStep;
-    Uint32 aiNextTime;
+    bool         m_running;
+    Game         &m_game;
+    std::string  m_title;
+    int          m_width;
+    int          m_height;
+    AI           *m_ai;
+    Uint32       m_aiTimeStep;
+    int          m_gridSize;
+    Uint32       m_aiNextTime;
+    SDL_Renderer *m_renderer;
+    SDL_Window   *m_window;
+    TTF_Font     *m_font;
+    SDL_Texture  *m_scoreText;
 
+    std::vector< std::pair<int, SDL_Texture*> >
+        m_numberTexBuf;
+    std::map< int, SDL_Color >
+        m_palette;
 
-    void drawGame();
-    void drawCell(int x, int y);
-    void drawScore();
-    void handleEvent();
+    void        drawGame();
+    void        drawCell(int x, int y);
+    void        drawScore();
+    void        handleEvent();
     SDL_Texture *addNumberTex(int n);
-    SDL_Texture *getNumberTex(int n);
+    SDL_Texture *getNumberTex(int n) const;
     SDL_Texture *newTextTex(std::string s, SDL_Color c);
-    void error();
+    void        error() const;
 };
 
 #endif
