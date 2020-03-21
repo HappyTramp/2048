@@ -49,7 +49,7 @@ class Graphics
     void        handleEvent();
     SDL_Texture *addNumberTex(int n);
     SDL_Texture *getNumberTex(int n) const;
-    SDL_Texture *newTextTex(std::string s, SDL_Color c);
+    SDL_Texture *newTextTex(std::string s, SDL_Color c, SDL_Color bg);
     void        error() const;
 
     static SDL_Color   makeColor(int r, int g, int b);

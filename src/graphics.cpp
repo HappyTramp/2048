@@ -21,7 +21,7 @@ Graphics::Graphics(Game &game, std::string title, int width, int height, AI *ai)
         error();
     if ((m_font = TTF_OpenFont("./font/noto_mono_regular.ttf", 16)) == NULL)
         error();
-    m_scoreText = newTextTex("score", makeColor(255, 255, 255));
+    m_scoreText = newTextTex("score", makeColor(255, 255, 255), makeColor(0, 0, 0));
     m_palette[0] = makeColor(10, 10, 10);
     m_palette[2] = makeColor(100, 100, 100);
     m_palette[4] = makeColor(65, 65, 65);
@@ -122,7 +122,7 @@ void Graphics::drawScore()
     }
     SDL_RenderCopy(m_renderer, m_scoreText, NULL, &r);
 
-    SDL_Texture *scoreNumTex = newTextTex(intToString(m_game.getScore()), makeColor(255, 255, 255));
+    SDL_Texture *scoreNumTex = newTextTex(intToString(m_game.getScore()), makeColor(255, 255, 255), makeColor(0, 0, 0));
     SDL_QueryTexture(scoreNumTex, NULL, NULL, &r.w, &r.h);
     if (m_width > m_height)
         r.y += 20;
@@ -172,7 +172,10 @@ SDL_Texture *Graphics::addNumberTex(int n)
 {
     SDL_Texture *tex;
     SDL_Color c = {255, 255, 255, 255};
-    tex = newTextTex(intToString(n), c);
+    SDL_Color bg = makeColor(30, 30, 30);
+    if (m_palette.find(n) != m_palette.end())
+        bg = m_palette[n];
+    tex = newTextTex(intToString(n), c, bg);
     m_numberTexBuf.push_back(std::make_pair(n, tex));
     return tex;
 }
@@ -185,12 +188,12 @@ SDL_Texture *Graphics::getNumberTex(int n) const
     return NULL;
 }
 
-SDL_Texture *Graphics::newTextTex(std::string s, SDL_Color c)
+SDL_Texture *Graphics::newTextTex(std::string s, SDL_Color c, SDL_Color bg)
 {
     SDL_Surface *surface;
     SDL_Texture *tex;
 
-    if ((surface = TTF_RenderText_Solid(m_font, s.c_str(), c)) == NULL)
+    if ((surface = TTF_RenderText_Shaded(m_font, s.c_str(), c, bg)) == NULL)
         error();
     if ((tex = SDL_CreateTextureFromSurface(m_renderer, surface)) == NULL)
         error();
